@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, List, ListItem, ListItemText, Typography, Box, IconButton, useMediaQuery, Grid,Card,CardContent } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, Typography, Box, IconButton, useMediaQuery, Grid, Card, CardContent, TextField } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Line ,Pie,Bar} from 'react-chartjs-2';
+import { Line, Pie, Bar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
 const drawerWidth = 240;
@@ -15,9 +15,11 @@ function Home() {
     users: {},
     services: {}
   });
+  const [userss, setUserss] = useState([]);
   const [open, setOpen] = useState(false); // Drawer open state
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchAllData();
@@ -46,6 +48,7 @@ function Home() {
         services: responses[1].data.services,
         income: responses[2].data
       });
+      setUserss(responses[0].data.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -60,147 +63,181 @@ function Home() {
   };
 
   const renderContent = () => {
-      const { income, users, services } = data;
-  
-      const dailyIncomeData = {
-        labels: Object.keys(income.dailyIncome || {}),
-        datasets: [{
-          label: 'Daily Income',
-          data: Object.values(income.dailyIncome || {}),
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        }],
-      };
-  
-      const serviceIncomeData = {
-        labels: Object.keys(income.serviceWiseIncome || {}),
-        datasets: [{
-          label: 'Service Wise Income',
-          data: Object.values(income.serviceWiseIncome || {}),
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-          ],
-          borderWidth: 1,
-        }],
-      };
-  
-      const employeeIncomeData = {
-        labels: Object.keys(income.employeeIncomes || {}),
-        datasets: [{
-          label: 'Employee Income',
-          data: Object.values(income.employeeIncomes || {}),
-          backgroundColor: 'rgba(153, 102, 255, 0.2)',
-          borderColor: 'rgba(153, 102, 255, 1)',
-          borderWidth: 1,
-        }],
-      };
-  
-      const totalIncome = income.totalIncome || 0;
-      const totalUsers = users.length || 0;
-      const totalServices = services.length || 0;
-  
+    const { income, users, services } = data;
+
+    const dailyIncomeData = {
+      labels: Object.keys(income.dailyIncome || {}),
+      datasets: [{
+        label: 'Daily Income',
+        data: Object.values(income.dailyIncome || {}),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      }],
+    };
+
+    const serviceIncomeData = {
+      labels: Object.keys(income.serviceWiseIncome || {}),
+      datasets: [{
+        label: 'Service Wise Income',
+        data: Object.values(income.serviceWiseIncome || {}),
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+        ],
+        borderWidth: 1,
+      }],
+    };
+
+    const employeeIncomeData = {
+      labels: Object.keys(income.employeeIncomes || {}),
+      datasets: [{
+        label: 'Employee Income',
+        data: Object.values(income.employeeIncomes || {}),
+        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1,
+      }],
+    };
+
+    const totalIncome = income.totalIncome || 0;
+    const totalUsers = users.length || 0;
+    const totalServices = services.length || 0;
+
     if (selectedOption === 'income') {
       return (
-        <Box sx={{ padding: 3 }}>
-        <Typography variant="h4" gutterBottom>Income Overview</Typography>
-        
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Total Income</Typography>
-                <Typography variant="h5">${totalIncome}</Typography>
-              </CardContent>
-            </Card>
+        <Box sx={{ padding: 0 }}>
+          <Typography variant="h4" gutterBottom>Admin Panel</Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Total Income</Typography>
+                  <Typography variant="h5">${totalIncome}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Total Users</Typography>
+                  <Typography variant="h5">{totalUsers}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Total Services</Typography>
+                  <Typography variant="h5">{totalServices}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Total Users</Typography>
-                <Typography variant="h5">{totalUsers}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Total Services</Typography>
-                <Typography variant="h5">{totalServices}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-        <Box sx={{ padding: 3 }}>
-      <Box sx={{ marginTop: 3, height: { xs: '300px', sm: '400px', md: '500px' } }}>
-        <Typography variant="h6">Daily Income</Typography>
-        <Line data={dailyIncomeData} options={{ maintainAspectRatio: true }} />
-      </Box>
-
-      <Box sx={{ marginTop: 3, height: { xs: '300px', sm: '400px', md: '500px' } }}>
-        <Typography variant="h6">Service Wise Income</Typography>
-        <Pie data={serviceIncomeData} options={{ maintainAspectRatio: true }} />
-      </Box>
-
-      <Box sx={{ marginTop: 3, height: { xs: '300px', sm: '400px', md: '500px' } }}>
-        <Typography variant="h6">Employee Wise Income</Typography>
-        <Bar data={employeeIncomeData} options={{ maintainAspectRatio: true }} />
-      </Box>
-    </Box>
-      </Box>
+          <Box sx={{ padding: 3 }}>
+            <Grid container spacing={3} sx={{ marginTop: 3 }}>
+              <Grid item xs={12} md={6} sx={{ marginBottom: '20px' }}>
+                <Box sx={{ height: { xs: '250px', sm: '300px', md: '350px' } }}>
+                  <Typography variant="h6" gutterBottom>
+                    Daily Income
+                  </Typography>
+                  <Line data={dailyIncomeData} options={{ maintainAspectRatio: false }} />
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6} sx={{ marginBottom: '20px' }}>
+                <Box sx={{ height: { xs: '250px', sm: '300px', md: '350px' } }}>
+                  <Typography variant="h6" gutterBottom>
+                    Service Wise Income
+                  </Typography>
+                  <Pie data={serviceIncomeData} options={{ maintainAspectRatio: false }} />
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6} sx={{ marginBottom: '20px' }}>
+                <Box sx={{ height: { xs: '250px', sm: '300px', md: '350px' } }}>
+                  <Typography variant="h6" gutterBottom>
+                    Employee Wise Income
+                  </Typography>
+                  <Bar data={employeeIncomeData} options={{ maintainAspectRatio: false }} />
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
       );
     } else if (selectedOption === 'users') {
+      const filteredUsers = userss.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())||
+        String(user.number).toLowerCase().includes(searchQuery.toLowerCase())
+      );
       return (
-        <Box>
-          <Typography variant="h6">Users</Typography>
-          <Typography variant="body1">Total Users: {users.length}</Typography>
-          {/* Render charts or data for users */}
-          <Line
-            data={{
-              labels: users.map(user => user.name),
-              datasets: [
-                {
-                  label: 'Number of Users',
-                  data: users.map((_, index) => index + 1),
-                  borderColor: 'rgba(255, 99, 132, 1)',
-                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                },
-              ],
-            }}
+        <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>Admin Panel</Typography>
+          <Typography variant="h6" gutterBottom>Users</Typography>
+          <TextField
+            label="Search here..."
+            variant="outlined"
+            fullWidth
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ marginBottom: 3 }}
           />
-          <pre>{JSON.stringify(users, null, 2)}</pre>
+          <Grid container spacing={3}>
+            {filteredUsers.map((user) => (
+              <Grid item xs={12} sm={6} md={4} key={user._id}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6">{user.name}</Typography>
+                    <Typography variant="body2">Email: {user.email}</Typography>
+                    <Typography variant="body2">Number: {user.number}</Typography>
+                    {user.addresses.length > 0 && (
+                      <>
+                        {user.addresses.map((address, index) => (
+                            <Box key={address._id} sx={{marginTop:'5px'}}>
+
+                            <Typography variant="body2" >Address :{index + 1} {address.address}</Typography>
+                            <Box sx={{ paddingLeft: 2 }}>
+
+                            <Typography variant="body2">city : {address.address}</Typography>
+                            <Typography variant="body2">Zipcode: {address.pincode}</Typography>
+                            </Box>
+                            </Box>
+                        ))}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       );
     } else if (selectedOption === 'services') {
       return (
-        <Box>
-          <Typography variant="h6">Services</Typography>
-          <Typography variant="body1">Total Services: {services.length}</Typography>
-          {/* Render charts or data for services */}
-          <Line
-            data={{
-              labels: services.map(service => service.name),
-              datasets: [
-                {
-                  label: 'Service Income',
-                  data: services.map(service => service.amount),
-                  borderColor: 'rgba(255, 206, 86, 1)',
-                  backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                },
-              ],
-            }}
-          />
-          <pre>{JSON.stringify(services, null, 2)}</pre>
+        <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>Admin Panel</Typography>
+          <Typography variant="h6" gutterBottom>Services</Typography>
+          <Grid container spacing={3}>
+            {data.services.map((service) => (
+              <Grid item xs={12} sm={6} md={4} key={service._id}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6">{service.name}</Typography>
+                    <Typography variant="body2">Price: ${service.amount}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       );
     }
@@ -208,15 +245,6 @@ function Home() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="menu"
-        onClick={handleDrawerToggle}
-        sx={{ display: isMobile ? 'block' : 'none',height:'20px' }}
-      >
-        <MenuIcon />
-      </IconButton>
       <Drawer
         sx={{
           width: drawerWidth,
@@ -232,22 +260,38 @@ function Home() {
         onClose={handleDrawerToggle}
       >
         <List>
-          {['income', 'users', 'services'].map((text) => (
-            <ListItem
-              button
-              key={text}
-              onClick={() => handleOptionClick(text)}
-              selected={selectedOption === text}
-            >
-              <ListItemText primary={text.charAt(0).toUpperCase() + text.slice(1)} />
-            </ListItem>
-          ))}
+          <ListItem button onClick={() => handleOptionClick('income')}>
+            <ListItemText primary="Income" />
+          </ListItem>
+          <ListItem button onClick={() => handleOptionClick('users')}>
+            <ListItemText primary="Users" />
+          </ListItem>
+          <ListItem button onClick={() => handleOptionClick('services')}>
+            <ListItemText primary="Services" />
+          </ListItem>
         </List>
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)`, marginTop: '0' }} // Adjust marginTop if needed
+        sx={{
+          flexGrow: 1,
+          bgcolor: (theme) => theme.palette.background.default,
+          p: 3,
+          width: `calc(100% - ${drawerWidth}px)`,
+        }}
       >
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerToggle}
+          edge="start"
+          sx={{
+            display: { sm: 'none' },
+            mb: 2,
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
         {renderContent()}
       </Box>
     </Box>
