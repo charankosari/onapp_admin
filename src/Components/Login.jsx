@@ -15,10 +15,10 @@ const LoginPage = () => {
       const token = localStorage.getItem('admintoken');
       if (token) {
         try {
-          const response = await axios.get('https://oneapp.trivedagroup.com/api/c3/user/me', { // Replace with your verification endpoint
+          const response = await axios.get('https://oneapp.trivedagroup.com/api/c3/user/me', { 
             headers: { Authorization: `Bearer ${token}` }
           });
-          const { user } = response.data;
+          const user=response.data.user;
 
           if (user.role === 'admin') {
             navigate('/home');
@@ -43,8 +43,8 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post('https://oneapp.trivedagroup.com/api/c3/user/login', { number:Number(number), password }); // Replace with your login endpoint
-      const { token, user } = response.data;
-
+      const user=response.data.user;
+      const token=response.data.jwtToken;
       localStorage.setItem('admintoken', token);
 
       if (user.role === 'admin') {
@@ -60,10 +60,13 @@ const LoginPage = () => {
   };
 
   return (
+    <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'90vh'}}>
+    
+    
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ padding: 3 }}>
         <Typography variant="h5" align="center" gutterBottom>
-          Login
+          Admin login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
@@ -103,6 +106,8 @@ const LoginPage = () => {
         </Box>
       </Paper>
     </Container>
+    </div>
+
   );
 };
 
