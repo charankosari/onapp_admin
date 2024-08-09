@@ -364,6 +364,7 @@ function Home() {
 
       return (
         <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>Admin Panel</Typography>
           <Typography variant="h6" gutterBottom>Bookings</Typography>
           <TextField
             label="Search here..."
