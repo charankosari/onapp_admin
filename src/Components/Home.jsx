@@ -6,6 +6,9 @@ import axios from 'axios';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import moment from 'moment';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
+import ListItemIcon from '@mui/material/ListItemIcon';
 const drawerWidth = 240;
 
 function Home() {
@@ -32,7 +35,7 @@ function Home() {
   const fetchAllData = async () => {
     const token = localStorage.getItem('admintoken');
     if (!token) {
-      navigate('/login');
+      navigate('/');
       return;
     }
 
@@ -428,6 +431,28 @@ function Home() {
           <ListItem button onClick={() => handleOptionClick('bookings')}>
             <ListItemText primary="Bookings" />
           </ListItem>
+          <ListItem 
+  button 
+  onClick={() => {
+    localStorage.removeItem('admintoken');
+    navigate('/')
+    // window.location.href('/');
+  }} 
+  sx={{
+    backgroundColor: 'red',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#b20000', 
+      color: '#d7d7d7',
+    }
+  }}
+>
+  <ListItemText primary="Signout" />
+  <ListItemIcon>
+    <ExitToAppIcon sx={{ color: 'white' }} />
+  </ListItemIcon>
+</ListItem>
+
         </List>
       </Drawer>
       <Box
