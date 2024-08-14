@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Container, Paper, CircularProgress } from '@mui/material';
 
 const LoginPage = () => {
-  const [number, setNumber] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -42,7 +42,7 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post('https://oneapp.trivedagroup.com/api/c3/user/login', { number:Number(number), password }); // Replace with your login endpoint
+      const response = await axios.post('https://oneapp.trivedagroup.com/api/c3/user/login', { name, password }); // Replace with your login endpoint
       const user=response.data.user;
       const token=response.data.jwtToken;
       localStorage.setItem('admintoken', token);
@@ -73,10 +73,10 @@ const LoginPage = () => {
             margin="normal"
             required
             fullWidth
-            label="Mobile Number"
-            type="number"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
+            label="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             autoFocus
           />
           <TextField
